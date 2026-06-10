@@ -1,0 +1,97 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "أحمد"
+    },
+    {
+      "id": "2",
+      "name": "سارة"
+    }
+  ],
+  "projects": [
+    {
+      "info": {
+        "id": 1,
+        "name": "Project Alpha",
+        "description": "A project management tool for teams.",
+        "createdAt": "2024-01-01T10:00:00Z",
+        "updatedAt": "2024-01-15T12:00:00Z"
+      },
+      "columns": [
+        {
+          "id": "todo",
+          "name": "To Do"
+        },
+        {
+          "id": "in-progress",
+          "name": "In Progress"
+        },
+        {
+          "id": "done",
+          "name": "Done"
+        }
+      ],
+      "tasks": [
+        {
+          "id": 101,
+          "title": "Design the homepage",
+          "columnId": "todo"
+        },
+        {
+          "id": 102,
+          "title": "Develop the user interface",
+          "columnId": "in-progress"
+        },
+        {
+          "id": 103,
+          "title": "Test the application",
+          "columnId": "in-progress"
+        }
+      ],
+      "id": "aX1D_QNGOts"
+    },
+    {
+      "info": {
+        "id": 2,
+        "name": "Project Beta",
+        "description": "Another project management tool for teams.",
+        "createdAt": "2024-01-01T10:00:00Z",
+        "updatedAt": "2024-01-15T12:00:00Z"
+      },
+      "columns": [
+        {
+          "id": "todo",
+          "name": "To Do"
+        },
+        {
+          "id": "in-progress",
+          "name": "In Progress"
+        },
+        {
+          "id": "done",
+          "name": "Done"
+        }
+      ],
+      "tasks": [
+        {
+          "id": 201,
+          "title": "play football",
+          "columnId": "todo"
+        },
+        {
+          "id": 202,
+          "title": "watch a movie",
+          "columnId": "in-progress"
+        },
+        {
+          "id": 203,
+          "title": "listen to music",
+          "columnId": "todo"
+        }
+      ],
+      "id": "G3YDi8dAvAg"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
