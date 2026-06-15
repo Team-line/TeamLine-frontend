@@ -17,33 +17,24 @@ export default function AuthForm() {
     setLoading(true);
     setMessage("جاري المعالجة...");
 
-    const endpoint = mode === "login" ? "/login" : "/register";
+    const endpoint = mode === "login" ? "/api/v1/auth/sign-in" : "/api/v1/auth/sign-up";
     const data = mode === "login" ? { email, password } : { name, email, password };
 
     try {
       const result = await api.post(endpoint, data);
-      
-      // في حال النجاح
       setMessage(result.message || "تمت العملية بنجاح");
-      
-      if (result.token) {
-        localStorage.setItem('token', result.token);
-        router.push('/Main');
-      }
+      router.push('../')
     } catch (error) {
-      // طباعة الخطأ في الكونسول لتسهيل اكتشاف المشكلة
       console.error("API Error:", error);
-      
-      // استخراج الرسالة من رد السيرفر أو إظهار رسالة افتراضية
       const errorMessage = 
-        error.response?.data?.message || 
-        "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
-      
+      error.response?.data?.message || "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
       setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="w-full">

@@ -1,10 +1,13 @@
 import React from 'react'
 import { useDraggable } from '@dnd-kit/core'
+import usePopStore from '@/store/PopStore'
 
 export const TaskCard = ({ task }) => {
   const { setNodeRef, listeners, attributes, transform, isDragging } = useDraggable({ 
     id: task.id 
   })
+
+  const openModal=usePopStore((state)=>state.openModal)
 
   const style = {
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
@@ -12,15 +15,18 @@ export const TaskCard = ({ task }) => {
     cursor: isDragging ? 'grabbing' : 'grab',
   }
 
+
   return (
     <div 
       ref={setNodeRef} 
       {...attributes} 
       {...listeners} 
       style={style}
-      className="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-md hover:border-blue-500 transition-colors duration-200 text-white font-medium select-none active:cursor-grabbing"
+      className="dark:bg-slate-800  bg-gray-100 border border-slate-700 p-4 rounded-xl shadow-md hover:border-blue-500 transition-colors duration-200 dark:text-white font-medium select-none active:cursor-grabbing"
     >
-      {task.title}
+      <p className=' hover:text-blue-300 cursor-pointer  transition-colors duration-500  p-4'
+      onClick={()=>{openModal('editTask', task)}}
+      >{task.title}</p>
     </div>
   )
 }

@@ -2,94 +2,70 @@
 import { DndContext } from '@dnd-kit/core'
 import React from 'react'
 import { useEffect, useState , use } from 'react'
-import api from '../../../../utils/api'
 import { Column } from '../../components/Column'
 import { TaskCard } from '../../components/TaskCard'
 import { Loading } from '../../components/Loading'
+import useBoardStore from '../../../../store/BoardStore'
+import usePopStore from '@/store/PopStore'
+import { TaskPopWindow } from '../../components/TaskPopWindow'
+import {AddColumnPop}from '../../components/AddColumnPop.jsx'
+
 
 export default function Projects({params}) {
       const resolveParams=use(params)
       const projectId = resolveParams.id
-      const [project, setProject]=useState([])
-      const [tasks, setTasks]=useState([])
-      const [loading, setLoading]=useState(false)
-
-
-      useEffect(()=>{
-            if(!projectId) return
-            const getTasks=async()=>{
-                  try {
-                        const response=await api.get(`/projects/${projectId}`)
-                        if(response){
-                              setProject(response ||[])
-                              setTasks(response.tasks || [])
-                        }else{
-                              console.log('No tasks found for this project')
-                        }
-                  } catch (error) {
-                        console.error('Error fetching tasks:', error)
-                  }
-            }
-            getTasks()
-      },[projectId])
-
-
-
-
-      const putTask=async(UpdatedTasks)=>{
-            try {
-                 setLoading(true)
-                  const response =await api.put(`/projects/${projectId}`, {
-                        ...project,
-                        tasks:UpdatedTasks
-                  })
-
-                  if(response){
-                        setTasks(UpdatedTasks)
-                        setLoading(false)
-                  }
-                  else {
-                        console.log('Failed to update task')
-                  }
-            } catch (error) {
-                  console.error('Error creating task:', error)
-                  setLoading(false)
-            }
-      }
+      const fetchProject=useBoardStore((state)=>state.fetchProject)
+      const moveTask=useBoardStore((state)=>state.moveTask)
+      //?استدعيت كل واحد لوحده عشان اقلل ال re-rendering 
+      const project = useBoardStore(state => state.project)
+      const tasks = useBoardStore(state => state.tasks)
+      const loading = useBoardStore(state => state.loading)
+      const columns = useBoardStore(state => state.columns)
+      const { isModalOpen } = usePopStore();
+      const [showAddColumn,setShowAddColumn]=useState(false)      
 
       
-      //* Handle drag end event to update task's column
+      useEffect(()=>{
+            fetchProject(projectId)
+      },[fetchProject,projectId])
+
+      
+      //  Handle drag end event to update task's column
       function handleDragEnd(event) {
             const { active, over } = event
-            if (!over) return
-            const UpdatedTasks=tasks.map((task)=>{
-                   return (
-                        task.id === active.id ? { ...task, columnId: over.id } : task
-                   )
-            })
-            setTasks(UpdatedTasks)
-            putTask(UpdatedTasks)
+            if (!over || active.id === over.id) return
 
+            moveTask(active.id,over.id,projectId)
 }
+
+
+      if(loading)return <Loading />
+
 
       return (
             <div className="p-8 min-h-screen relative">
-            <h1 className="text-3xl font-bold dark:text-white mb-8">
-                  {project?.info?.name || "Loading Project..."}
-            </h1>
+                  {isModalOpen&& <TaskPopWindow />}
+                  {showAddColumn&& <AddColumnPop setShowAddColumn={setShowAddColumn} />}
 
-            {loading && <Loading />}
+            <div className='flex justify-between items-center mb-10'>
+                  <h1 className="text-3xl font-bold dark:text-white mb-8">
+                  </h1>
+
+                  <button className='p-4 bg-gray-100 dark:bg-gray-800 rounded-lg dark:text-white hover:bg-gray-900 transition-all duration-500 cursor-pointer'
+                  onClick={()=>setShowAddColumn(true)}
+                  >Add Column</button>
+            </div>
 
             <DndContext onDragEnd={handleDragEnd}>
-                  <div className="flex gap-6 items-start overflow-x-auto pb-4">
-                  {project?.columns?.map((col) => (
-                  <Column key={col.id} column={col}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4">
+                  {columns?.map((col) => (
+                        <Column key={col.id} column={col}>
                         {tasks
                         .filter((t) => t.columnId === col.id)
                         .map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                              <TaskCard key={task.id} task={task} />
                         ))}
-                  </Column>
+                        </Column>
                   ))}
                   </div>
             </DndContext>
