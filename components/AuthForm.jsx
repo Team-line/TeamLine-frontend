@@ -1,16 +1,30 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import api from "../utils/api"; // تأكد من المسار الصحيح لملف الـ api.js
+import { useState, useEffect } from "react";
+import api from "../utils/api"; 
+import useAuthStore from '../store/AuthStore';
 
-export default function AuthForm() {
+// قمنا بتغيير اسم الـ prop إلى initialToken لمنع التكرار
+export default function AuthForm({ initialToken }) {
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  // العمليات الخاصة بـ Zustand
+  const setToken = useAuthStore((state) => state.setToken);
+  const currentToken = useAuthStore((state) => state.token);
   const router = useRouter();
+
+
+  useEffect(() => {
+    if (initialToken) {
+      setToken(initialToken);
+    }
+  }, [initialToken, setToken]);
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,19 +36,26 @@ export default function AuthForm() {
 
     try {
       const result = await api.post(endpoint, data);
-      setMessage(result.message || "تمت العملية بنجاح");
-      router.push('../')
+      const receivedToken = result?.token || result?.data?.token;
+
+      if (receivedToken) {
+        setToken(receivedToken); // 2. تخزين التوكن الجديد الصحيح في Zustand
+        setMessage("تمت العملية بنجاح! جاري التوجيه...");
+        router.push("/dashboard");
+
+      } else {
+        setMessage(result.message || "تمت العملية بنجاح");
+      }
+      
     } catch (error) {
       console.error("API Error:", error);
       const errorMessage = 
-      error.response?.data?.message || "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
+        error.response?.data?.message || "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
       setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   return (
     <div className="w-full">
@@ -108,9 +129,8 @@ export default function AuthForm() {
         </button>
       </form>
 
-      {/* منطقة عرض الرسائل - تم تغيير اللون للأحمر لضمان الوضوح عند الأخطاء */}
       {message && (
-        <p className="mt-4 text-center text-sm font-semibold text-red-600">
+        <p className={`mt-4 text-center text-sm font-semibold ${message.includes("نجاح") ? "text-green-600" : "text-red-600"}`}>
           {message}
         </p>
       )}
