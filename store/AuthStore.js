@@ -1,11 +1,19 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-const useAuthStore = create((set) => ({
-  user: null,
-  token: '',
-  // دالة بسيطة لتحديث التوكن من الخارج
-  setToken: (token) => set({ token }),
-  clearAuth: () => set({ user: null, token: '' })
-}))
+const useAuthStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      token: '',
+      setToken: (token) => set({ token }),
+      setUser: (user) => set({ user }),
+      clearAuth: () => set({ user: null, token: '' }),
+    }),
+    {
+      name: 'auth-storage', // الاسم الذي سيخزن به في الـ localStorage
+    }
+  )
+)
 
 export default useAuthStore;

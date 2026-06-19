@@ -22,7 +22,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" dir="rtl" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" dir="rtl"  className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`} suppressHydrationWarning>
         <body>
             <Provider>
               <div className="dark:bg-black min-h-lvh">

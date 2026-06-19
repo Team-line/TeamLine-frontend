@@ -1,8 +1,11 @@
 import React from 'react'
+import {ControllerBoardHeader} from '@/components/ControllerBoardHeader'
 
 export default function DashboardPage() {
-      
+
       return (
-            <div>Dashboard page</div>
+            <div>
+                  <ControllerBoardHeader />
+            </div>
       )
 }

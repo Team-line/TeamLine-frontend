@@ -1,3 +1,16 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+
+
+/*
+purple #3730a3
+white  #fcf8ff
+
+green #22c55e
+
+warning #f59e0b
+
+error #ef4444
+*/

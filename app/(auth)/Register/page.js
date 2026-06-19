@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { LoginForm } from '@/components/LoginForm';
+import { RegisterForm } from '@/components/RegisterForm';
 import Image from 'next/image'
 
 export default async function Register() {
@@ -12,7 +12,7 @@ export default async function Register() {
         
         {/* شق نموذج التسجيل: يأخذ الارتفاع الكامل المتاح ليتوسط داخله المكون */}
         <div className='w-full lg:w-1/2 flex flex-1 justify-center items-center p-4 md:p-8 min-h-screen lg:min-h-0'>
-          <LoginForm initialToken={token} />
+          <RegisterForm initialToken={token} />
         </div>
 
         {/* شق الصورة الجانبية */}
@@ -20,7 +20,7 @@ export default async function Register() {
           <div className='w-full max-w-xl'>
             <div className="relative w-full aspect-square bg-white dark:bg-zinc-900/50 rounded-3xl p-6 shadow-xl shadow-indigo-100/40 dark:shadow-none border border-indigo-100/50 dark:border-zinc-800/50">
               <Image 
-                src="/photo2.png"
+                src="/photo3.png"
                 alt="إدارة المشاريع الذكية"
                 width={600}
                 height={600}

@@ -1,9 +1,11 @@
 'use client'
 import { ThemeButton } from "@/components/ThemeButton"
+import useAuthStore from "@/store/AuthStore"
 import { usePathname } from "next/navigation"
 
 export const Header = () => {
       const path = usePathname()
+      const user=useAuthStore((state)=>state.user)
 
       const links = [
             { id: 1, name: 'لوحة التحكم', url: '/dashboard' },
@@ -36,6 +38,7 @@ export const Header = () => {
                   {/* Actions */}
                   <div className="flex items-center gap-3">
                         <ThemeButton />
+                        <div className="w-10 h-10 rounded-full bg-red-500 flex justify-center items-center uppercase  text-2xl text-white">{user?.name[0]}</div>
                   </div>
             </header>
       )

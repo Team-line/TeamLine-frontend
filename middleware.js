@@ -1,4 +1,4 @@
-
+import Cookies from "js-cookie"
 import { NextResponse } from "next/server"
 
 export default function middleware(request) {
