@@ -51,9 +51,9 @@ export default function Projects({params}) {
                   <h1 className="text-3xl font-bold dark:text-white mb-8">
                   </h1>
 
-                  <button className='p-4 bg-gray-100 dark:bg-gray-800 rounded-lg dark:text-white hover:bg-gray-900 transition-all duration-500 cursor-pointer'
+                  <button className='py-2 px-4  font-bold bg-[#3730a3] rounded-lg text-white  transition-all duration-500 cursor-pointer hover:bg-[#564fc0]'
                   onClick={()=>setShowAddColumn(true)}
-                  >Add Column</button>
+                  > + اضف عمود</button>
             </div>
 
             <DndContext onDragEnd={handleDragEnd}>

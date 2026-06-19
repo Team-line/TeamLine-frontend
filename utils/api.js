@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 //https://undiluted-strict-dilation.ngrok-free.dev
-
+//http://localhost:4000/
+//https://teamline-backend.onrender.com/
 
 const api = axios.create({
     baseURL: 'https://teamline-backend.onrender.com/',
