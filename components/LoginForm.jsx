@@ -41,32 +41,69 @@ export const LoginForm = ({ initialToken }) => {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    setStatus({ type: 'loading', text: 'جاري المعالجة...' });
+  e.preventDefault();
 
-    try {
-      const response = await api.post('/api/v1/auth/sign-in', formData)
-      const receivedToken = response?.token || response.data?.token;
-      const receivedUser = response?.user || response.data?.user;
+  setStatus({
+    type: "loading",
+    text: "جاري المعالجة..."
+  });
 
-      if (receivedToken) {
-        setToken(receivedToken)
-        setStatus({ type: 'success', text: 'تمت العملية بنجاح! جاري التوجيه...' });
-        setUser(receivedUser)
-        
-        setTimeout(()=>{
-          router.push('/dashboard')
-        },1500)
-        
-      } else {
-        setStatus({ type: 'error', text: 'فشل في الحصول على رمز الدخول.' });
-      }
-    } catch (error) {
-      console.error("API Error:", error);
-      const errorMessage = error.response?.data?.message || "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
-      setStatus({ type: 'error', text: errorMessage });
+  try {
+
+    const response = await api.post(
+      "/api/v1/auth/sign-in",
+      formData
+    );
+
+
+    console.log("LOGIN RESPONSE:", response);
+
+
+    const receivedUser = response.data.user;
+
+
+    if (receivedUser) {
+
+      setUser(receivedUser);
+
+      setStatus({
+        type: "success",
+        text: "تم تسجيل الدخول بنجاح! جاري التوجيه..."
+      });
+
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
+
+
+    } else {
+
+      setStatus({
+        type: "error",
+        text: "فشل في الحصول على بيانات المستخدم."
+      });
+
     }
+
+
+  } catch (error) {
+
+    console.error("LOGIN ERROR:", error);
+
+
+    const errorMessage =
+      error.response?.data?.message ||
+      "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
+
+
+    setStatus({
+      type: "error",
+      text: errorMessage
+    });
+
   }
+}
 
   return (
     <div className='w-full flex flex-col justify-center items-center'>
