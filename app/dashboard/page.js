@@ -6,7 +6,7 @@ import {ControllerBoardDetails} from '@/components/ControllerBoardDetails'
 export default function DashboardPage() {
 
       return (
-            <div>
+            <div className='relative'>
                   <ControllerBoardHeader />
                   <ControllerBoardCardsSection />
                   <ControllerBoardDetails />
