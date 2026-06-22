@@ -5,7 +5,6 @@ import Image from 'next/image'
 export default async function Register() {
 
   const cookieStore = await cookies();
-  const token = cookieStore.get('accessToken')?.value || '';
 
   return (
     <div className='w-full min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-50' dir="rtl">
