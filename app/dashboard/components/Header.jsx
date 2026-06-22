@@ -9,8 +9,9 @@ export const Header = () => {
 
       const links = [
             { id: 1, name: 'لوحة التحكم', url: '/dashboard' },
-            { id: 2, name: 'المشاريع', url: '/dashboard/projects' },
-            { id: 3, name: 'سجلاتي الزمنية', url: '/dashboard/time-logs' },
+            { id: 2, name: ' مساحة العمل', url: '/dashboard/WorkSpace' },
+            { id: 3, name: 'المشاريع', url: '/dashboard/WorkSpace/projects' },
+            { id: 4, name: 'سجلاتي الزمنية', url: '/dashboard/time-logs' },
       ]
 
       const activeLink = links.find((l) => l.url === path)

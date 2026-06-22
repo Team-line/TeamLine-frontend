@@ -60,12 +60,13 @@ export const LoginForm = ({ initialToken }) => {
 
 
     const receivedUser = response.data.user;
+    const receivedToken = response.data.token;
 
 
     if (receivedUser) {
 
       setUser(receivedUser);
-
+      setToken(receivedToken);
       setStatus({
         type: "success",
         text: "تم تسجيل الدخول بنجاح! جاري التوجيه..."

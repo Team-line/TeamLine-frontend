@@ -30,8 +30,8 @@ export const SideBar = () => {
             },
             {
                   id: 2,
-                  name: 'المشاريع',
-                  url: '/dashboard/projects',
+                  name: 'مساحة عمل ',
+                  url: '/dashboard/WorkSpace',
                   icon: faFolderOpen,
             },
             {

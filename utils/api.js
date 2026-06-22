@@ -1,5 +1,10 @@
 import axios from "axios";
-import useAuthStore from "@/store/AuthStore"; // استيراد الـ store الخاص بك
+import useAuthStore from "@/store/AuthStore"; 
+import Cookies from 'js-cookie';
+
+
+//https://undiluted-strict-dilation.ngrok-free.dev/
+//https://teamline-backend.onrender.com/
 
 const api = axios.create({
   baseURL: "https://teamline-backend.onrender.com/",
@@ -9,23 +14,6 @@ const api = axios.create({
   withCredentials: true, //! For Cookeis   
   timeout:5000
 });
-
-
-//! Request interceptor
-api.interceptors.request.use(
-  (config) => {
-    // جلب التوكن الحالي من الـ Zustand Store ديناميكياً
-    const token = useAuthStore.getState().token;
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 //! Response interceptor
 api.interceptors.response.use(
