@@ -19,7 +19,7 @@ export const ControllerBoardHeader = () => {
 
         <button className='p-4 text-white bg-[#3730a3] drop-shadow-lg rounded-2xl w-full lg:w-fit transition-all duration-500 hover:bg-[#655fbc]'
         onClick={handelClick}
-        >+ مشروع جديد</button>
+        >+ مساحة عمل جديدة</button>
     </div>
     
     {isOpen && 

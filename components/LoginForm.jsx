@@ -46,11 +46,8 @@ export const LoginForm = () => {
     const response = await api.post("/api/v1/auth/sign-in",formData);
     console.log("LOGIN RESPONSE:", response);
     const receivedUser = response.data.user;
-    const receivedToken = response.data.token;
     if (receivedUser) {
-
       setUser(receivedUser);
-      setToken(receivedToken);
       setStatus({
         type: "success",
         text: "تم تسجيل الدخول بنجاح! جاري التوجيه..."
@@ -72,15 +69,10 @@ export const LoginForm = () => {
 
 
   } catch (error) {
-
     console.error("LOGIN ERROR:", error);
-
-
     const errorMessage =
       error.response?.data?.message ||
       "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر";
-
-
     setStatus({
       type: "error",
       text: errorMessage

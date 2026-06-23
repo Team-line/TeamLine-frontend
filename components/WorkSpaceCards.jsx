@@ -1,26 +1,33 @@
 'use client'
-import useAuthStore from '@/store/AuthStore'
+import useWorkSpaceStore from '@/store/WorkSpaceStore' // تأكد أن المسار مضبوط الآن 👍
 import React, { useEffect } from 'react'
-import api from '@/utils/api'
+import { WorkSpaceCard } from './WorkSpaceCard'
+import { Loader } from './Loader'
 
 export const WorkSpaceCards = () => {
-    const userId=useAuthStore((state)=>state.id)
+    const workSpace = useWorkSpaceStore((state) => state.workSpace)
+    const fetchWorkSpace = useWorkSpaceStore((state) => state.fetchWorkSpace)
+    const loading = useWorkSpaceStore((state) => state.loading) // إضافة حالة التحميل (اختياري)
 
-    useEffect(()=>{
-        const getData=async()=>{
-            try {
-                const response=await api.get('/api/v1/workspaces')
-                console.log(response)
-            } catch (error) {
-                console.log('error',error)
-            }
-        }
+    useEffect(() => {
+        fetchWorkSpace()
+    }, [])
+    
 
-        getData()
+    if (loading) {
+        return <Loader />
+    }
 
-    },[])
-
-  return (
-    <div>WorkSpaceCards</div>
-  )
+    return (
+        <div className='grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
+            {workSpace?.map((ele) => {
+                return (
+                    <WorkSpaceCard 
+                        key={ele._id || ele.id} 
+                        name={ele.name} 
+                    />
+                )
+            })}
+        </div>
+    )
 }

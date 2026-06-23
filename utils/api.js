@@ -11,7 +11,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, //! For Cookeis   
+  withCredentials: true, //! For Cookeis  
+  timeout:5000 
 });
 
 //! Response interceptor
