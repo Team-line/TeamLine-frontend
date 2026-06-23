@@ -13,7 +13,7 @@ export const WorkSpaceCards = () => {
         fetchWorkSpace()
     }, [])
     
-
+    
     if (loading) {
         return <Loader />
     }
@@ -24,7 +24,9 @@ export const WorkSpaceCards = () => {
                 return (
                     <WorkSpaceCard 
                         key={ele._id || ele.id} 
-                        name={ele.name} 
+                        name={ele.name}
+                        id={ele.id}
+                        description={ele.description}
                     />
                 )
             })}

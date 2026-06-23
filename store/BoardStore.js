@@ -2,18 +2,28 @@ import { create } from "zustand"
 import api from '../utils/api'
 
 const useBoardStore=create((set,get)=>({
+    WorkSpaceId:'',
+    AllProjects:[],
     project:{},
     tasks:[],
     loading:false,
     columns:[],
-    error,
+    error:null,
 
-    fetchProjects:async(projectId)=>{
+
+    setWorkSpaceId:(id)=>{
+        set({WorkSpaceId:id})
+    },
+
+    fetchProjects:async()=>{
         set({loading:true})
         try {
-            const response =await api.get(`/projects/${projectId}`)
-            set({project:response,
+            const workSpaceIdLocal=get().WorkSpaceId
+            const response =await api.get(`/api/v1/workspaces/${workSpaceIdLocal}/boards`)
+            set({AllProjects:response,
+                loading:false
                 })
+                console.log(response)
 
         } catch (error) {
             console.error('Error fetching project:', error);
