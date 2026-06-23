@@ -14,7 +14,7 @@ const useWorkSpaceStore = create((set, get) => ({
     try {
       const response = await api.get('/api/v1/workspaces')
       console.log("FETCH RESPONSE:", response)
-      
+
       if (response.data) {
         const data = Array.isArray(response.data) ? response.data : response.data.data || []
         set({ workSpace: data, loading: false })
@@ -32,10 +32,10 @@ const useWorkSpaceStore = create((set, get) => ({
   deleteWorkSpace: async (workSpaceID) => {
     set({ loading: true, error: null })
     const prevWorkSpace = [...get().workSpace]
-    
+
     try {
       const response = await api.delete(`/api/v1/workspaces/${workSpaceID}`)
-      
+
       if (response) {
         const updateWorkSpace = get().workSpace.filter((ele) => ele.id !== workSpaceID)
         set({ workSpace: updateWorkSpace, loading: false })
@@ -58,7 +58,7 @@ const useWorkSpaceStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const response = await api.put(`/api/v1/workspaces/${workSpaceID}`, updatedData)
-      
+
       if (response.data) {
         const updatedItem = response.data.data || response.data
         const updatedList = get().workSpace.map((item) => 
