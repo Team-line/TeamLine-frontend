@@ -9,7 +9,7 @@ import useAuthStore from '@/store/AuthStore'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export const RegisterForm = ({ initialToken }) => {
+export const RegisterForm = () => {
 
   const [formData, setFormData] = useState({
     name: '',
@@ -17,19 +17,12 @@ export const RegisterForm = ({ initialToken }) => {
     password: ''
   })
 
-  // استدعاء دالات الحفظ من الـ Zustand Store الخاص بك
   const setUser = useAuthStore((state) => state.setUser)
-  const setToken = useAuthStore((state) => state.setToken)
   
   const [status, setStatus] = useState({ type: '', text: '' })
   const router = useRouter()
 
-  // مزامنة التوكن القادم من الـ Cookies (السيرفر) مع الـ Zustand Store فور تحميل الصفحة
-  useEffect(() => {
-    if (initialToken) {
-      setToken(initialToken)
-    }
-  }, [initialToken, setToken])
+
 
   const data = [
     { 
@@ -77,13 +70,11 @@ export const RegisterForm = ({ initialToken }) => {
     try {
       const response = await api.post('/api/v1/auth/sign-up',formData)
       console.log("REGISTER RESPONSE:", response)
-      
       const newUser = response.data.newUser
       const token = response.data.token 
 
       if (newUser) {
         setUser(newUser)
-        if (token) setToken(token)
 
         setStatus({
           type: 'success',
@@ -102,10 +93,7 @@ export const RegisterForm = ({ initialToken }) => {
 
     } catch (error) {
       console.error("REGISTER ERROR:", error)
-      const errorMessage =
-        error.response?.data?.message ||
-        "حدث خطأ في الاتصال، تأكد من تشغيل السيرفر"
-
+      const errorMessage =error.response?.data?.message ||"حدث خطأ في الاتصال، تأكد من تشغيل السيرفر"
       setStatus({
         type: 'error',
         text: errorMessage

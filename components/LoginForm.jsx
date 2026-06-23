@@ -8,17 +8,15 @@ import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export const LoginForm = ({ initialToken }) => {
+export const LoginForm = () => {
 
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: ''
   })
   
-  const setToken = useAuthStore((state) => state.setToken)
   const setUser = useAuthStore((state) => state.setUser)
-  const [status, setStatus] = useState({ type: '', text: '' }) // تعديل لتمييز لون الخطأ عن النجاح
+  const [status, setStatus] = useState({ type: '', text: '' })
   const router = useRouter()
 
   const data = [
@@ -26,11 +24,7 @@ export const LoginForm = ({ initialToken }) => {
     { id: 2, fieldKey: 'password', name: 'كلمة المرور', place: '••••••••', icon: faLock, type: 'password' },
   ]
 
-  useEffect(() => {
-    if (initialToken) {
-      setToken(initialToken)
-    }
-  }, [initialToken, setToken])
+
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -49,20 +43,10 @@ export const LoginForm = ({ initialToken }) => {
   });
 
   try {
-
-    const response = await api.post(
-      "/api/v1/auth/sign-in",
-      formData
-    );
-
-
+    const response = await api.post("/api/v1/auth/sign-in",formData);
     console.log("LOGIN RESPONSE:", response);
-
-
     const receivedUser = response.data.user;
     const receivedToken = response.data.token;
-
-
     if (receivedUser) {
 
       setUser(receivedUser);
@@ -71,7 +55,6 @@ export const LoginForm = ({ initialToken }) => {
         type: "success",
         text: "تم تسجيل الدخول بنجاح! جاري التوجيه..."
       });
-
 
       setTimeout(() => {
         router.push("/dashboard");

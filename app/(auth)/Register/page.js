@@ -1,17 +1,15 @@
-import { cookies } from 'next/headers'
 import { RegisterForm } from '@/components/RegisterForm';
 import Image from 'next/image'
 
 export default async function Register() {
 
-  const cookieStore = await cookies();
 
   return (
     <div className='w-full min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-50' dir="rtl">
         
         {/* شق نموذج التسجيل: يأخذ الارتفاع الكامل المتاح ليتوسط داخله المكون */}
         <div className='w-full lg:w-1/2 flex flex-1 justify-center items-center p-4 md:p-8 min-h-screen lg:min-h-0'>
-          <RegisterForm initialToken={token} />
+          <RegisterForm />
         </div>
 
         {/* شق الصورة الجانبية */}
