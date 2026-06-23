@@ -1,4 +1,5 @@
 'use client'
+
 import { create } from "zustand"
 import api from '../utils/api'
 
@@ -15,7 +16,6 @@ const useWorkSpaceStore = create((set, get) => ({
       console.log("FETCH RESPONSE:", response)
       
       if (response.data) {
-        // التأكد من صيغة البيانات القادمة من السيرفر
         const data = Array.isArray(response.data) ? response.data : response.data.data || []
         set({ workSpace: data, loading: false })
       } else {
@@ -28,7 +28,7 @@ const useWorkSpaceStore = create((set, get) => ({
     }
   },
 
-  // 2. حذف مساحة عمل (مع ميزة Optimistic UI للتراجع في حال الفشل)
+  // 2. حذف مساحة عمل
   deleteWorkSpace: async (workSpaceID) => {
     set({ loading: true, error: null })
     const prevWorkSpace = [...get().workSpace]
@@ -43,18 +43,17 @@ const useWorkSpaceStore = create((set, get) => ({
         console.log("حدث خطأ في الحذف")
         set({ loading: false })
       }
-      
     } catch (error) {
       console.error("DELETE ERROR:", error)
       set({ 
         loading: false, 
         error: error.response?.data?.message || error.message || error, 
-        workSpace: prevWorkSpace // إرجاع البيانات القديمة لو فشل الحذف بالسيرفر
+        workSpace: prevWorkSpace 
       })
     }
   },
 
-  // 3. تحديث مساحة عمل (تم بناؤها بشكل صحيح وتستقبل المعطيات الحالية)
+  // 3. تحديث مساحة عمل
   updateWorkSpace: async (workSpaceID, updatedData) => {
     set({ loading: true, error: null })
     try {
