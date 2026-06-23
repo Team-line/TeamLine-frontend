@@ -70,7 +70,7 @@ export const RegisterForm = () => {
     try {
       const response = await api.post('/api/v1/auth/sign-up',formData)
       console.log("REGISTER RESPONSE:", response)
-      const newUser = response.data.newUser
+      const newUser = response.newUser
       const token = response.data.token 
 
       if (newUser) {
