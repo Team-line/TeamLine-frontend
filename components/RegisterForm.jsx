@@ -71,19 +71,19 @@ export const RegisterForm = () => {
       const response = await api.post('/api/v1/auth/sign-up',formData)
       console.log("REGISTER RESPONSE:", response)
       const newUser = response.data.user
+      console.log("REGISTER RESPONSE:", newUser)
 
       if (newUser) {
         setUser(newUser)
-
         setStatus({
           type: 'success',
           text: 'تم إنشاء الحساب بنجاح! جاري التوجيه...'
         })
-
         setTimeout(() => {
           router.push('/dashboard')
         }, 1500)
-      } else {
+      } 
+      else {
         setStatus({
           type: 'error',
           text: 'فشل في إنشاء الحساب، يرجى المحاولة مرة أخرى.'
