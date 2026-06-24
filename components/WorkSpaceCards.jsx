@@ -7,7 +7,7 @@ import { Loader } from './Loader'
 export const WorkSpaceCards = () => {
     const workSpace = useWorkSpaceStore((state) => state.workSpace)
     const fetchWorkSpace = useWorkSpaceStore((state) => state.fetchWorkSpace)
-    const loading = useWorkSpaceStore((state) => state.loading) // إضافة حالة التحميل (اختياري)
+    const loading = useWorkSpaceStore((state) => state.loading) 
 
     useEffect(() => {
         fetchWorkSpace()

@@ -1,7 +1,7 @@
 'use client'
 import useAuthStore from '@/store/AuthStore'
 import React, { useState } from 'react'
-import {AddNewProjectPop} from '@/components/AddNewProjectPop'
+import {AddNewWorkSpacePop} from './AddNewWorkSpacePop'
 
 export const ControllerBoardHeader = () => {
     const user=useAuthStore((state)=>state.user)
@@ -23,7 +23,7 @@ export const ControllerBoardHeader = () => {
     </div>
     
     {isOpen && 
-     <AddNewProjectPop
+     <AddNewWorkSpacePop
     isOpen={isOpen} 
     setIsOpen={setIsOpen} />}
     </>

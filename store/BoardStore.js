@@ -1,97 +1,70 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 import api from '../utils/api'
 
-const useBoardStore=create((set,get)=>({
-    WorkSpaceId:'',
-    AllProjects:[],
-    project:{},
-    tasks:[],
-    loading:false,
-    columns:[],
-    error:null,
+const useBoardStore = create(
+    persist(
+        (set, get) => ({
+
+            WorkSpaceId: '',
+            AllProjects: [],
+            project: {},
+            tasks: [],
+            loading: false,
+            columns: [],
+            error: null,
+
+            setWorkSpaceId: (id) => {
+                set({WorkSpaceId: id})
+            },
 
 
-    setWorkSpaceId:(id)=>{
-        set({WorkSpaceId:id})
-    },
+            fetchProjects: async (workSpaceId) => {
+                set({loading: true,error: null})
+                try {
+                    const response = await api.get(`/api/v1/workspaces/${workSpaceId}/boards`)
+                    set({
+                        AllProjects: response,
+                        loading: false
+                    })
+                } catch (error) {
+                    console.error(error)
+                    set({loading: false,error})
+                }
+            },
 
-    fetchProjects:async()=>{
-        set({loading:true})
-        try {
-            const workSpaceIdLocal=get().WorkSpaceId
-            const response =await api.get(`/api/v1/workspaces/${workSpaceIdLocal}/boards`)
-            set({AllProjects:response,
-                loading:false
-                })
-                console.log(response)
+            addProject: async (newProject) => {
+                const workSpaceId = get().WorkSpaceId
+                if(!workSpaceId){
+                throw new Error("Workspace ID not found")
+                }
 
-        } catch (error) {
-            console.error('Error fetching project:', error);
-            set({ loading: false, error });
+                const currentProjects = get().AllProjects
+                try {
+                    const response = await api.post(`/api/v1/workspaces/${workSpaceId}/boards`,newProject)
+
+                    set({AllProjects:[...currentProjects,response?.data]})
+                    return response
+                    
+                } catch (error) {
+                    console.error("ADD ERROR", error)
+                    set({error})
+                    throw error
+                }
+            }
+        }),
+
+
+
+
+
+
+
+        //!The name in Local Storage 
+        {
+            name: "board-storage"
         }
-    },
+    )
+)
 
-
-
-
-
-
-
-
-    // //? move and save in DB
-    // moveTask:async(taskId,newColumnId,projectId)=>{
-    //     set({loading:true})
-    //     const {tasks,project}=get()
-    //     const prevTasks=[...tasks]
-
-    //     const UpdateTasks=tasks.map((ele)=>{
-    //         return ele.id===taskId?{...ele,columnId:newColumnId}:ele
-    //     })
-
-    //     set({tasks:UpdateTasks})
-
-    //     try {
-    //         const response =await api.put(`/projects/${projectId}`,{...project, tasks:UpdateTasks})
-    //         set({loading:false})
-    //     } catch (error) {
-    //         set({ 
-    //             tasks:prevTasks,
-    //             loading: false });
-    //     }
-
-    // },
-
-
-    // //? Add Column 
-    // addColumn:async(ColumnName)=>{
-    //     set({loading:true})
-    //     const {columns, project, projectID}=get()
-    //     const prevColumns=[...columns]
-    //     const newColumn={
-    //         id:ColumnName.trim().toLowerCase().replaceAll(" ", "-"),
-    //         name:ColumnName
-    //     }
-    //     const updateColumns = [...columns, newColumn];
-    //     try {
-    //         const response =await api.put(`/projects/${projectID}`,{...project,columns:updateColumns})
-    //         set({
-    //             columns:updateColumns,
-    //             loading:false,
-    //         })
-
-    //     } catch (error) {
-    //         set({ 
-    //             columns:prevColumns,
-    //             loading: false });
-    //     }
-    //     },
-
-
-
-
-
-
-}))
-
-
-export default useBoardStore;
+export default useBoardStore

@@ -8,7 +8,7 @@ const useWorkSpaceStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  // 1. جلب مساحات العمل
+    //! Get All WorkSpaces
   fetchWorkSpace: async () => {
     set({ loading: true, error: null })
     try {
@@ -28,7 +28,8 @@ const useWorkSpaceStore = create((set, get) => ({
     }
   },
 
-  // 2. حذف مساحة عمل
+
+    //! Delete WorkSpace
   deleteWorkSpace: async (workSpaceID) => {
     set({ loading: true, error: null })
     const prevWorkSpace = [...get().workSpace]
@@ -45,32 +46,29 @@ const useWorkSpaceStore = create((set, get) => ({
       }
     } catch (error) {
       console.error("DELETE ERROR:", error)
-      set({ 
-        loading: false, 
-        error: error.response?.data?.message || error.message || error, 
-        workSpace: prevWorkSpace 
+      set({
+        loading: false,
+        error: error.response?.data?.message || error.message || error,
+        workSpace: prevWorkSpace
       })
     }
   },
 
-  // 3. تحديث مساحة عمل
+  //! Upadate WorkSpace
   updateWorkSpace: async (workSpaceID, updatedData) => {
     set({ loading: true, error: null })
+    const prevWorkSpace = [...get().workSpace]
     try {
       const response = await api.put(`/api/v1/workspaces/${workSpaceID}`, updatedData)
+      const updatedItem = response.data?.data || response.data || updatedData
+      const updateWorkspace = get().workSpace.map((ele) => {
+        return ele.id === workSpaceID ? { ...ele, ...updatedItem } : ele
+      })
+      set({ workSpace: updateWorkspace, loading: false })
 
-      if (response.data) {
-        const updatedItem = response.data.data || response.data
-        const updatedList = get().workSpace.map((item) => 
-          item.id === workSpaceID ? { ...item, ...updatedItem } : item
-        )
-        set({ workSpace: updatedList, loading: false })
-      } else {
-        set({ loading: false })
-      }
     } catch (error) {
       console.error("UPDATE ERROR:", error)
-      set({ loading: false, error: error.response?.data?.message || error.message || error })
+      set({ workSpace: prevWorkSpace, loading: false, error: error.response?.data?.message || error.message || error })
     }
   }
 }))

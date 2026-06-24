@@ -12,7 +12,7 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true, //! For Cookeis  
-  timeout:5000 
+  timeout:10000 
 });
 
 //! Response interceptor
