@@ -3,13 +3,13 @@ import useBoardStore from '@/store/BoardStore'
 import useWorkSpaceStore from '@/store/WorkSpaceStore'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import { ActionMenu } from './ActionMenu' // قم بتعديل المسار حسب مشروعك
 
 export const WorkSpaceCard = ({ name, id, description }) => {
   const shortName = name ? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : 'WS'
   const router = useRouter()
   
   //? States
-  const [isOpen, setIsOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(name)
   const [editDescription, setEditDescription] = useState(description || '')
@@ -19,36 +19,26 @@ export const WorkSpaceCard = ({ name, id, description }) => {
   const updateWorkSpace = useWorkSpaceStore((state) => state.updateWorkSpace)
   const setWorkSpaceId = useBoardStore((state) => state.setWorkSpaceId)
 
-
   function handleClick() {
     setWorkSpaceId(id)
     router.push('/dashboard/WorkSpace/projects')
   }
 
 
-  function handleShowMenu() {
-    setIsOpen(!isOpen)
-  }
-
-
+  
   //! Delete WorkSpace by Zustand
   function handleDelete() {
     deleteWorkSpace(id)
-    setIsOpen(false)
   }
 
   function handleEditClick() {
     setIsEditing(true)
-    setIsOpen(false)    
   }
 
   //! Save Changes by Zustand
   async function handleSaveEdit() {
     if (!editName.trim()) return
-     updateWorkSpace(id, {
-      name: editName,
-      description: editDescription
-    })
+    await updateWorkSpace(id, { name: editName, description: editDescription })
     setIsEditing(false)
   }
 
@@ -93,7 +83,6 @@ export const WorkSpaceCard = ({ name, id, description }) => {
           </div>
         </div>
       ) : (
-        // ======= 2. وضع العرض الطبيعي =======
         <>
           <div className='flex justify-between items-center'>
             <div className="flex items-center gap-3.5">
@@ -109,15 +98,8 @@ export const WorkSpaceCard = ({ name, id, description }) => {
               </div>
             </div>
 
-            {/* زر النقاط الثلاث */}
-            <div 
-              className="flex flex-col gap-1 p-2 cursor-pointer hover:bg-gray-100 rounded-full w-8 h-8 justify-center items-center"
-              onClick={handleShowMenu}
-            >
-              <div className="w-1 h-1 bg-gray-700 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-700 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-700 rounded-full"></div>
-            </div>
+            {/*The Component here  */}
+            <ActionMenu onEdit={handleEditClick} onDelete={handleDelete} />
           </div>
 
           <div className='p-2 text-gray-600 text-sm truncate'>
@@ -129,9 +111,8 @@ export const WorkSpaceCard = ({ name, id, description }) => {
               نشط
             </span>
 
-            {/* هنا وضعنا حدث فتح المساحة بدلاً من الكارت الخارجي ليعمل بشكل مستقل وآمن */}
             <button 
-              className="p-4 bg-gray-100 rounded-2xl text-xs font-semibold text-indigo-800  transition-all duration-500 hover:scale-105 hover:bg-gray-300 flex items-center gap-1"
+              className="p-4 bg-gray-100 rounded-2xl text-xs font-semibold text-indigo-800 transition-all duration-500 hover:scale-105 hover:bg-gray-300 flex items-center gap-1"
               onClick={handleClick}
             >
               فتح المساحة
@@ -148,25 +129,6 @@ export const WorkSpaceCard = ({ name, id, description }) => {
           </div>
         </>
       )}
-
-      {/* قائمة الخيارات (تعديل / حذف) */}
-      {isOpen && (
-        <div className='absolute left-4 top-14 bg-white border border-slate-100 shadow-xl rounded-xl flex flex-col py-1.5 min-w-[120px] z-20'>
-          <button 
-            onClick={handleEditClick}
-            className='text-right px-4 py-2 text-sm text-slate-700 hover:bg-slate-50'
-          >
-            تعديل
-          </button>
-          <button 
-            onClick={handleDelete}
-            className='text-right px-4 py-2 text-sm text-rose-600 hover:bg-rose-50'
-          >
-            حذف
-          </button>
-        </div>
-      )}
-
     </div>
   )
 }

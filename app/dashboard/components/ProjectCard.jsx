@@ -1,14 +1,25 @@
 import React from 'react'
 import { DetailButton } from './DetailButton'
+import { ActionMenu } from '@/components/ActionMenu'
+import useBoardStore from '@/store/BoardStore'
 
 export const ProjectCard = ({ project }) => {
+
+  //todo Zustand Store 
+  const deleteProject=useBoardStore((state)=>state.deleteProject)
+
+  function handleDelete(){
+    deleteProject(project.id)
+  }
+
   return (
     <div className="flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-6 m-4 w-full max-w-sm shadow-sm hover:shadow-md hover:border-blue-500/50 hover:transform hover:translate-y-[-5px] transition-all duration-500 group">
       
-      <div className="mb-4">
+      <div className="mb-4 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
           {project?.name}
         </h2>
+        <ActionMenu onEdit={''} onDelete={handleDelete} />
       </div>
 
       <div className="flex-grow">

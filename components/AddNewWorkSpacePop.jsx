@@ -1,11 +1,14 @@
 'use client'
 import React, { useState } from 'react'
 import api from '@/utils/api'
+import { useRouter } from 'next/navigation'
 
 export const AddNewWorkSpacePop = ({ isOpen, setIsOpen }) => {
+    //todo State 
     const [projectName, setProjectName] = useState('')
     const [projectDisc, setProjectDisc] = useState('')
     const [status, setStatus] = useState({ type: '', text: '' })
+    const router=useRouter()
 
     if (!isOpen) return null;
 
@@ -39,6 +42,7 @@ export const AddNewWorkSpacePop = ({ isOpen, setIsOpen }) => {
                 // الانتظار لمدة ثانية واحدة قبل إغلاق النافذة ليراها المستخدم
                 setTimeout(() => {
                     handleClose()
+                    router.push('/dashboard/WorkSpace')
                 }, 1000)
             }
         } catch (error) {

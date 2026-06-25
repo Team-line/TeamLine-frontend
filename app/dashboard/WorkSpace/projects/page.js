@@ -27,7 +27,7 @@ export default function Projects() {
 
   return (
     <>
-      <div className='p-6 flex flex-col gap-6' dir="rtl">
+      <div className='p-6 flex flex-col gap-6 '>
 
         <div className='flex justify-between items-center border-b pb-4'>
           <h1 className='text-2xl font-bold'>
@@ -45,7 +45,7 @@ export default function Projects() {
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
 
-          {AllProjects?.data?.map((ele)=>(
+          {AllProjects?.map((ele)=>(
             <ProjectCard
               key={ele.id}
               project={ele}

@@ -10,10 +10,10 @@ export const DetailButton = ({projectId}) => {
     }
 
   return (
-    <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg transition-all shadow-lg shadow-blue-900/20"
+    <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg transition-all shadow-md"
     onClick={handleClick}
     >
-      View Details
+      إنتقل للمشروع
     </button>
   )
 }

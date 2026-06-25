@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import useBoardStore from '@/store/BoardStore'
+import { useRouter } from 'next/router'
 
 export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
     //todo State Elements
@@ -8,6 +9,7 @@ export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
     const [projectDisc, setProjectDisc] = useState('')
     const [status, setStatus] = useState({ type: '', text: '' })
 
+    
     //todo Zustand Elements
     const addProject = useBoardStore((state) => state.addProject)
 

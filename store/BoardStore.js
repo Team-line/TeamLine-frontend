@@ -18,13 +18,14 @@ const useBoardStore = create(
                 set({WorkSpaceId: id})
             },
 
-
+            //!Get All Projects
             fetchProjects: async (workSpaceId) => {
                 set({loading: true,error: null})
                 try {
                     const response = await api.get(`/api/v1/workspaces/${workSpaceId}/boards`)
+                    console.log(response)
                     set({
-                        AllProjects: response,
+                        AllProjects: response.data,
                         loading: false
                     })
                 } catch (error) {
@@ -33,6 +34,8 @@ const useBoardStore = create(
                 }
             },
 
+
+             //!Add new  Project
             addProject: async (newProject) => {
                 const workSpaceId = get().WorkSpaceId
                 if(!workSpaceId){
@@ -51,14 +54,27 @@ const useBoardStore = create(
                     set({error})
                     throw error
                 }
-            }
+            },
+
+      //! Delete Project
+        deleteProject: async (projectId) => {
+        const prevProjects = [...get().AllProjects];
+        const workspaceId = get().WorkSpaceId;
+
+        const filteredProjects = prevProjects.filter((ele) => ele.id !== projectId);
+        set({ AllProjects: filteredProjects, loading: true, error: null });
+
+        try {
+            await api.delete(`/api/v1/workspaces/${workspaceId}/boards/${projectId}`);
+            set({ loading: false });
+        } catch (error) {
+            console.error("Delete ERROR:", error);
+            set({ AllProjects: prevProjects, error: error.message || error, loading: false });
+        }
+    }
+
+
         }),
-
-
-
-
-
-
 
         //!The name in Local Storage 
         {
