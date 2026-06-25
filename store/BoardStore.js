@@ -78,7 +78,11 @@ const useBoardStore = create(
 
         //!The name in Local Storage 
         {
-            name: "board-storage"
+            name: "board-storage",
+            
+             partialize:(state)=>({
+             WorkSpaceId: state.WorkSpaceId
+             })
         }
     )
 )

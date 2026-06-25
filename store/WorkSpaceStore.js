@@ -4,9 +4,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import api from '../utils/api'
 
-const useWorkSpaceStore = create(
-  persist(
-    (set, get) => ({
+const useWorkSpaceStore = create((set, get) => ({
       workSpace: [],
       loading: false,
       error: null,
@@ -81,10 +79,6 @@ const useWorkSpaceStore = create(
       }
     }), 
     
-    {
-    name: "WorkSpace-storage"
-    }
-    
-  ))
+  )
 
 export default useWorkSpaceStore;
