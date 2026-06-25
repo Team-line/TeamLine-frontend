@@ -19,7 +19,7 @@ export default function Projects() {
             if (!WorkSpaceId) return;
             fetchProjects(WorkSpaceId)
 
-          }, [WorkSpaceId, fetchProjects])
+          }, [WorkSpaceId,fetchProjects])
 
 
           if (loading) return <Loader />

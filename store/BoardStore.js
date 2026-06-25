@@ -71,7 +71,28 @@ const useBoardStore = create(
             console.error("Delete ERROR:", error);
             set({ AllProjects: prevProjects, error: error.message || error, loading: false });
         }
-    }
+    },
+
+
+    //!Upade the Project
+        updateProject:async(projectId,ProjectData)=>{
+            const prevProjects=[...get().AllProjects]
+            const workspaceId=get().WorkSpaceId
+
+            const UpadateProject=get().AllProjects.map((ele)=>{
+                return ele.id===projectId?{...ele,name:ProjectData.name, description:ProjectData.description}:ele
+            })
+            set({AllProjects:UpadateProject,loading:true})
+            try {
+                await api.put(`/api/v1/workspaces/${workspaceId}/boards/${projectId}`,ProjectData)
+                set({loading:false})
+            } catch (error) {
+                 console.error("Update ERROR:", error);
+            set({ AllProjects: prevProjects, error: error.message || error, loading: false });
+            }
+            
+
+        },
 
 
         }),
