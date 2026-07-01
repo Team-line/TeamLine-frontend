@@ -11,7 +11,7 @@ const useAuthStore = create(
       clearAuth: () => set({ user: null, token: '' }),
     }),
     {
-      name: 'auth-storage', // الاسم الذي سيخزن به في الـ localStorage
+      name: 'auth-storage'
     }
   )
 )

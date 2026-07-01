@@ -1,7 +1,10 @@
+'use client'
 import React, { useState } from 'react'
 import { DetailButton } from './DetailButton'
-import { ActionMenu } from '@/components/ActionMenu'
+import { ActionMenu } from './ActionMenu'
 import useBoardStore from '@/store/BoardStore'
+import { useDeleteProject } from './useDeleteProject' 
+import { useUpdateProject } from './useUpdateProject' 
 
 export const ProjectCard = ({ project }) => {
   //? States 
@@ -9,24 +12,27 @@ export const ProjectCard = ({ project }) => {
   const [editName, setEditName] = useState(project?.name || '')
   const [editDescription, setEditDescription] = useState(project?.description || '')
 
+  //? React Query Hooks
+  const { isDeleting, deleteProject } = useDeleteProject()
+  const { isUpdating, updateProject } = useUpdateProject()
+
   //? Zustand Store 
-  const deleteProject = useBoardStore((state) => state.deleteProject)
-  const updateProject = useBoardStore((state) => state.updateProject) 
+  const workspaceId = useBoardStore((state) => state.WorkSpaceId)
 
   function handleDelete() {
-    if (confirm('هل أنت متأكد من حذف هذا المشروع؟')) {
-      deleteProject(project.id)
-    }
+      deleteProject({ workspaceId, projectId: project.id })
   }
 
   function handleSaveEdit() {
-
     if (!editName.trim()) return
     
-    if (updateProject) {
-      updateProject(project.id, { name: editName, description: editDescription })
-    }
-    setIsEditing(false)
+    updateProject({
+      workspaceId,
+      projectId: project.id,
+      projectData: { name: editName, description: editDescription }
+    }, {
+      onSuccess: () => setIsEditing(false)
+    })
   }
 
   function handleCancelEdit() {
@@ -42,16 +48,18 @@ export const ProjectCard = ({ project }) => {
         /*Editing State*/
         <div className="flex flex-col gap-3 w-full h-full justify-between">
           <div className="flex flex-col gap-2">
-            <h4 className="text-sm font-semibold text-slate-700">تعديل المشروع  </h4>
+            <h4 className="text-sm font-semibold text-slate-700">تعديل المشروع</h4>
             <input 
               type="text" 
-              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-indigo-500"
+              disabled={isUpdating} // قفل الحقل أثناء الحفظ
+              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-indigo-500 disabled:opacity-50"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               placeholder="اسم المشروع"
             />
             <textarea 
-              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-indigo-500 resize-none h-16"
+              disabled={isUpdating}
+              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-indigo-500 resize-none h-16 disabled:opacity-50"
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               placeholder="الوصف (اختياري)"
@@ -61,29 +69,30 @@ export const ProjectCard = ({ project }) => {
           <div className="flex justify-end gap-2 mt-2">
             <button 
               onClick={handleCancelEdit} 
-              className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600"
+              disabled={isUpdating}
+              className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 disabled:cursor-not-allowed"
             >
               إلغاء
             </button>
             <button 
               onClick={handleSaveEdit} 
-              className="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+              disabled={isUpdating}
+              className="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
             >
-              حفظ التغييرات
+              {isUpdating ? "جاري الحفظ..." : "حفظ التغييرات"}
             </button>
           </div>
         </div>
       ) : (
         
-        /*Nromal State*/
+        /*Normal State*/
         <>
           <div>
             <div className="mb-4 flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
                 {project?.name}
               </h2>
-              {/* ربط زر التعديل بتغيير الحالة */}
-              <ActionMenu onEdit={() => setIsEditing(true)} onDelete={handleDelete} />
+              <ActionMenu onEdit={() => setIsEditing(true)} onDelete={handleDelete} isDeleting={isDeleting} />
             </div>
 
             <div className="mb-6">

@@ -1,5 +1,5 @@
 'use client'
-import useWorkSpaceStore from '@/store/WorkSpaceStore' // تأكد أن المسار مضبوط الآن 👍
+import useWorkSpaceStore from '@/store/WorkSpaceStore'
 import React, { useEffect } from 'react'
 import { WorkSpaceCard } from './WorkSpaceCard'
 import { Loader } from './Loader'

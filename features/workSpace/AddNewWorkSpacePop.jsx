@@ -1,52 +1,43 @@
 'use client'
 import React, { useState } from 'react'
-import useBoardStore from '@/store/BoardStore'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import { useCreateWorkSpace } from './useCreateWorkSpace' // 👈 استيراد الهوك الجديد
+import { toast } from 'react-hot-toast'
 
-export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
-    //todo State Elements
+export const AddNewWorkSpacePop = ({ isOpen, setIsOpen }) => {
+    //? States 
     const [projectName, setProjectName] = useState('')
     const [projectDisc, setProjectDisc] = useState('')
-    const [status, setStatus] = useState({ type: '', text: '' })
-
     
-    //todo Zustand Elements
-    const addProject = useBoardStore((state) => state.addProject)
+    const router = useRouter()
+    //? hooks using
+    const { isCreating, createWorkspace } = useCreateWorkSpace() 
+    
 
     if (!isOpen) return null;
 
     const handleClose = () => {
         setProjectName('')
         setProjectDisc('')
-        setStatus({ type: '', text: '' })
         setIsOpen(false)
     }
 
-    async function handleSubmit() {
-        if (!projectDisc || !projectName) {
-            setStatus({ type: 'error', text: 'الرجاء ملء جميع الحقول' })
+    function handelSubmit() {
+        if (!projectDisc.trim() || !projectName.trim()) {
+            toast.error('الرجاء ملء جميع الحقول المفروضة')
             return;
         }
-        const ProjectData = {
-        name: projectName,
-        description: projectDisc
-        }
-        try {
-            setStatus({ type: 'loading', text: 'جاري إنشاء المشروع...' })
-            const response = await addProject(ProjectData)
-            if (response) {
-                setStatus({ type: 'success', text: 'تم إنشاء المشروع بنجاح! 🎉' })
 
-                setTimeout(() => {
-                    handleClose()
-                }, 1000)
+        //? Mutation من React Query
+        createWorkspace(
+            { name: projectName, description: projectDisc },
+            {
+                onSuccess: () => {
+                    handleClose();
+                    router.push('/dashboard/WorkSpace');
+                }
             }
-        } catch (error) {
-            setStatus({
-                type: 'error',
-                text: error.response?.data?.message || 'فشل إنشاء المشروع'
-            })
-        }
+        );
     }
 
     return (
@@ -55,11 +46,11 @@ export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
 
                 {/* الرأس */}
                 <div className='flex justify-between items-center border-b pb-3 border-gray-100'>
-                    <h3 className='text-lg font-bold text-gray-800'>إنشاء مشروع جديد</h3>
+                    <h3 className='text-lg font-bold text-gray-800'>إنشاء مساحة عمل جديدة</h3>
                     <button
                         className='transition-all duration-300 w-8 h-8 flex justify-center items-center cursor-pointer hover:bg-gray-100 text-gray-500 hover:text-gray-800 rounded-full text-sm'
                         onClick={handleClose}
-                        disabled={status.type === 'loading'}
+                        disabled={isCreating}
                     >
                         ✕
                     </button>
@@ -68,12 +59,12 @@ export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
                 {/* الحقول */}
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-1.5'>
-                        <label className='text-sm font-medium text-gray-700'>اسم المشروع</label>
+                        <label className='text-sm font-medium text-gray-700'>اسم مساحة العمل</label>
                         <input
                             type="text"
                             value={projectName}
-                            disabled={status.type === 'loading' || status.type === 'success'}
-                            placeholder='أدخل اسم المشروع...'
+                            disabled={isCreating}
+                            placeholder='أدخل اسم مساحة العمل...'
                             className='outline-none border border-gray-300 p-2.5 rounded-xl focus:border-indigo-700 transition-colors text-sm disabled:bg-gray-50'
                             onChange={(e) => setProjectName(e.target.value)}
                         />
@@ -84,45 +75,30 @@ export const AddNewProjectPop = ({ isOpen, setIsOpen }) => {
                         <textarea
                             rows="3"
                             value={projectDisc}
-                            disabled={status.type === 'loading' || status.type === 'success'}
-                            placeholder='اكتب وصفاً مختصراً للمشروع...'
+                            disabled={isCreating}
+                            placeholder='اكتب وصفاً مختصراً لمساحة العمل...'
                             className='outline-none border border-gray-300 p-2.5 rounded-xl focus:border-indigo-700 transition-colors text-sm resize-none disabled:bg-gray-50'
                             onChange={(e) => setProjectDisc(e.target.value)}
                         ></textarea>
                     </div>
                 </div>
 
-                {status.text && (
-                    <div className={`text-xs font-semibold p-2.5 rounded-lg border ${status.type === 'error'
-                            ? 'bg-red-50 text-red-600 border-red-100'
-                            : status.type === 'success'
-                                ? 'bg-green-50 text-green-600 border-green-100'
-                                : 'bg-indigo-50 text-indigo-600 border-indigo-100'
-                        }`}>
-                        {status.text}
-                    </div>
-                )}
-
                 {/* أزرار التحكم */}
                 <div className='flex gap-3 mt-2 justify-end'>
                     <button
                         className='px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                         onClick={handleClose}
-                        disabled={status.type === 'loading' || status.type === 'success'}
+                        disabled={isCreating}
                     >
                         إلغاء
                     </button>
-
+                    
                     <button
                         className='px-5 py-2 text-sm font-medium text-white bg-indigo-700 hover:bg-indigo-800 rounded-xl cursor-pointer transition-colors disabled:bg-indigo-400 disabled:cursor-not-allowed'
-                        onClick={handleSubmit}
-                        disabled={status.type === 'loading' || status.type === 'success'}
+                        onClick={handelSubmit}
+                        disabled={isCreating}
                     >
-                        {status.type === 'loading'
-                            ? 'جاري الإنشاء...'
-                            : status.type === 'success'
-                                ? 'تم بنجاح!'
-                                : 'إضافة المشروع'}
+                        {isCreating ? 'جاري الإنشاء...' : 'إضافة مساحة عمل'}
                     </button>
                 </div>
 

@@ -1,7 +1,7 @@
 'use client'
 import useAuthStore from '@/store/AuthStore'
 import React, { useState } from 'react'
-import {AddNewWorkSpacePop} from './AddNewWorkSpacePop'
+import {AddNewWorkSpacePop} from '@/features/workSpace/AddNewWorkSpacePop'
 
 export const ControllerBoardHeader = () => {
     const user=useAuthStore((state)=>state.user)
